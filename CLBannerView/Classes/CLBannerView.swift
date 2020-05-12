@@ -115,7 +115,7 @@ public final class CLBannerView: UIView {
         }
     }
     
-    override func willMove(toWindow newWindow: UIWindow?) {
+    public override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
         currentIndex = 1
         imageViews.first?.image = displayImages[currentIndex - 1]
