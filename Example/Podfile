@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'CLBannerView_Example' do
+  pod 'CLBannerView', :path => '../'
+
+  target 'CLBannerView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
