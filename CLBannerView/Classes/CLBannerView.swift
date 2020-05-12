@@ -19,14 +19,13 @@ public final class CLBannerView: UIView {
     fileprivate var timer: Timer?
     var currentIndex: Int = 0
     
-    private var initialStateFlag = false
-    
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: bounds)
         scrollView.isPagingEnabled = true
         scrollView.delegate = self
         scrollView.bounces = false
         scrollView.showsHorizontalScrollIndicator = false
+        scrollView.addObserver(self, forKeyPath: "bounds", options: .new, context: nil)
         return scrollView
     }()
     
@@ -36,7 +35,16 @@ public final class CLBannerView: UIView {
     }()
         
     deinit {
+        scrollView.removeObserver(self, forKeyPath: "bounds", context: nil)
         timer?.invalidate()
+    }
+    
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if true == keyPath?.elementsEqual("bounds") {
+            initialState()
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
     }
     
     public func addImage(image: UIImage) {
@@ -106,22 +114,9 @@ public final class CLBannerView: UIView {
             addConstraint(NSLayoutConstraint.init(item: pageControl, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
             addConstraint(NSLayoutConstraint.init(item: pageControl, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 20))
         }
-        
-        if !initialStateFlag {
-            initialState()
-        }
-    }
-    
-    public override func willMove(toWindow newWindow: UIWindow?) {
-        super.willMove(toWindow: newWindow)
-        guard displayImages.count > 2, imageViews.count > 2 else {
-            return
-        }
-        initialState()
     }
     
     func initialState() {
-        initialStateFlag = true
         currentIndex = 1
         imageViews.first?.image = displayImages[currentIndex - 1]
         imageViews[1].image = displayImages[currentIndex]
