@@ -38,7 +38,7 @@ public final class CLBannerView: UIView {
         timer?.invalidate()
     }
     
-    func addImage(image: UIImage) {
+    public func addImage(image: UIImage) {
         guard displayImages.count > 2 else {
             return
         }
@@ -46,14 +46,14 @@ public final class CLBannerView: UIView {
         displayImages.replaceSubrange(0..<1, with: [image])
     }
     
-    func replaceImage(image: UIImage, at index: Int) {
+    public func replaceImage(image: UIImage, at index: Int) {
         guard index < displayImages.count - 2 else {
             return
         }
         displayImages.replaceSubrange(index..<index + 1, with: [image])
     }
     
-    func setImages(images: [UIImage]) {
+    public func setImages(images: [UIImage]) {
         
         guard images.count > 0 else {
             return

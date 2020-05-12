@@ -1,5 +1,5 @@
 PODS:
-  - CLBannerView (0.1.2)
+  - CLBannerView (0.1.4)
 
 DEPENDENCIES:
   - CLBannerView (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CLBannerView: faeaafc0b99876afab5de70d2ed077a72b24891c
+  CLBannerView: c9617d70b37afd6bf78d59aa470b9d0120135b48
 
 PODFILE CHECKSUM: 0dc287fd0e2ab73fdcaa0aa02f721ee92bdba7db
 
