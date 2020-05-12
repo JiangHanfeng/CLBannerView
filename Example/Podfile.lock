@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CLBannerView: 970c08ace7ca22628b7505b5f679bd0f89820008
+  CLBannerView: 4528beabf05538710e0a3c531a6ea78442f62bfe
 
 PODFILE CHECKSUM: 0dc287fd0e2ab73fdcaa0aa02f721ee92bdba7db
 
