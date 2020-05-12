@@ -117,6 +117,11 @@ public final class CLBannerView: UIView {
     }
     
     func initialState() {
+        guard displayImages.count > 2, imageViews.count > 2 else {
+            print("initialState failed")
+            return
+        }
+        print("initialState success")
         currentIndex = 1
         imageViews.first?.image = displayImages[currentIndex - 1]
         imageViews[1].image = displayImages[currentIndex]
