@@ -12,7 +12,7 @@
 
 import UIKit
 
-class CLBannerView: UIView {
+public final class CLBannerView: UIView {
 
     fileprivate var displayImages: [UIImage] = []
     fileprivate var imageViews: [UIImageView] = []
