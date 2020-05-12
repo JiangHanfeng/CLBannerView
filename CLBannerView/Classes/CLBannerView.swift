@@ -19,6 +19,7 @@ public final class CLBannerView: UIView {
     fileprivate var timer: Timer?
     var currentIndex: Int = 0
     
+    private var initialStateFlag = false
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: bounds)
@@ -67,15 +68,35 @@ public final class CLBannerView: UIView {
         
         pageControl.numberOfPages = images.count
         
-        guard nil == scrollView.superview else {
-            return
-        }
-        
         if nil == scrollView.superview {
             scrollView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(scrollView)
             addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[scrollView]|", options: .alignAllCenterY, metrics: nil, views: ["scrollView":scrollView]))
             addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[scrollView]|", options: .alignAllCenterX, metrics: nil, views: ["scrollView":scrollView]))
+            
+            for i in 0..<3 {
+                let imageView = UIImageView(frame: CGRect(x: scrollView.bounds.width * CGFloat(i), y: 0, width: scrollView.bounds.width, height: scrollView.bounds.height))
+                imageView.translatesAutoresizingMaskIntoConstraints = false
+                imageView.contentMode = .scaleToFill
+                imageView.image = displayImages[i]
+                scrollView.addSubview(imageView)
+                imageViews.append(imageView)
+                
+                scrollView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]|", options: .alignAllCenterX, metrics: nil, views: ["imageView":imageView]))
+                addConstraint(NSLayoutConstraint.init(item: imageView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
+                addConstraint(NSLayoutConstraint.init(item: imageView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
+                var hFormat = "H:|"
+                var views: [String : UIImageView?] = [:]
+                for j in 0...i {
+                    let imageViewKey = "imageView\(j)"
+                    hFormat.append("[\(imageViewKey)]")
+                    views.updateValue(imageViews[j], forKey: imageViewKey)
+                }
+                addConstraints(NSLayoutConstraint.constraints(withVisualFormat: hFormat, options: .alignAllCenterY, metrics: nil, views: views as [String : Any]))
+                if i == 2 {
+                    addConstraint(NSLayoutConstraint.init(item: imageView, attribute: .trailing, relatedBy: .equal, toItem: scrollView, attribute: .trailing, multiplier: 1, constant: 0))
+                }
+            }
         }
         
         if nil == pageControl.superview {
@@ -86,37 +107,21 @@ public final class CLBannerView: UIView {
             addConstraint(NSLayoutConstraint.init(item: pageControl, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 20))
         }
         
-        for subview in scrollView.subviews {
-            subview.removeFromSuperview()
-        }
-        
-        for i in 0..<3 {
-            let imageView = UIImageView(frame: CGRect(x: scrollView.bounds.width * CGFloat(i), y: 0, width: scrollView.bounds.width, height: scrollView.bounds.height))
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-            imageView.contentMode = .scaleToFill
-            imageView.image = displayImages[i]
-            scrollView.addSubview(imageView)
-            imageViews.append(imageView)
-            
-            scrollView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]|", options: .alignAllCenterX, metrics: nil, views: ["imageView":imageView]))
-            addConstraint(NSLayoutConstraint.init(item: imageView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
-            addConstraint(NSLayoutConstraint.init(item: imageView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
-            var hFormat = "H:|"
-            var views: [String : UIImageView?] = [:]
-            for j in 0...i {
-                let imageViewKey = "imageView\(j)"
-                hFormat.append("[\(imageViewKey)]")
-                views.updateValue(imageViews[j], forKey: imageViewKey)
-            }
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: hFormat, options: .alignAllCenterY, metrics: nil, views: views as [String : Any]))
-            if i == 2 {
-                addConstraint(NSLayoutConstraint.init(item: imageView, attribute: .trailing, relatedBy: .equal, toItem: scrollView, attribute: .trailing, multiplier: 1, constant: 0))
-            }
+        if !initialStateFlag {
+            initialState()
         }
     }
     
     public override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
+        guard displayImages.count > 2, imageViews.count > 2 else {
+            return
+        }
+        initialState()
+    }
+    
+    func initialState() {
+        initialStateFlag = true
         currentIndex = 1
         imageViews.first?.image = displayImages[currentIndex - 1]
         imageViews[1].image = displayImages[currentIndex]
