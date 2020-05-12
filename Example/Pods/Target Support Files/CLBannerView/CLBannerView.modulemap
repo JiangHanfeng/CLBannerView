@@ -1,0 +1,6 @@
+framework module CLBannerView {
+  umbrella header "CLBannerView-umbrella.h"
+
+  export *
+  module * { export * }
+}

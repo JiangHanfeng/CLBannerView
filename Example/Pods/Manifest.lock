@@ -1,0 +1,16 @@
+PODS:
+  - CLBannerView (0.1.0)
+
+DEPENDENCIES:
+  - CLBannerView (from `../`)
+
+EXTERNAL SOURCES:
+  CLBannerView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  CLBannerView: 970c08ace7ca22628b7505b5f679bd0f89820008
+
+PODFILE CHECKSUM: 0dc287fd0e2ab73fdcaa0aa02f721ee92bdba7db
+
+COCOAPODS: 1.9.1
