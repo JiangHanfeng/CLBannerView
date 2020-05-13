@@ -12,20 +12,20 @@
 
 import UIKit
 
-public final class CLBannerView: UIView {
+public class CLBannerView: UIView, UIScrollViewDelegate {
 
     fileprivate var displayImages: [UIImage] = []
     fileprivate var imageViews: [UIImageView] = []
     fileprivate var timer: Timer?
     var currentIndex: Int = 0
     
-    lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: bounds)
         scrollView.isPagingEnabled = true
         scrollView.delegate = self
         scrollView.bounces = false
         scrollView.showsHorizontalScrollIndicator = false
-        scrollView.addObserver(self, forKeyPath: "bounds", options: .new, context: nil)
+        scrollView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         return scrollView
     }()
     
@@ -35,12 +35,12 @@ public final class CLBannerView: UIView {
     }()
         
     deinit {
-        scrollView.removeObserver(self, forKeyPath: "bounds", context: nil)
+        scrollView.removeObserver(self, forKeyPath: "contentSize", context: nil)
         timer?.invalidate()
     }
     
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if true == keyPath?.elementsEqual("bounds") {
+        if true == keyPath?.elementsEqual("contentSize") {
             initialState()
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -116,12 +116,10 @@ public final class CLBannerView: UIView {
         }
     }
     
-    func initialState() {
+    private func initialState() {
         guard displayImages.count > 2, imageViews.count > 2 else {
-            print("initialState failed")
             return
         }
-        print("initialState success")
         currentIndex = 1
         imageViews.first?.image = displayImages[currentIndex - 1]
         imageViews[1].image = displayImages[currentIndex]
@@ -138,7 +136,7 @@ public final class CLBannerView: UIView {
         RunLoop.current.add(timer!, forMode: .commonModes)
     }
     
-    func adjustScrollPosition() {
+    private func adjustScrollPosition() {
         if 2 == scrollView.contentOffset.x / scrollView.bounds.width {
             currentIndex += 1;
             if currentIndex == displayImages.count - 1 {
@@ -161,22 +159,20 @@ public final class CLBannerView: UIView {
             scrollView.setContentOffset(CGPoint(x: scrollView.bounds.width, y: 0), animated: false)
         }
     }
-}
-
-extension CLBannerView: UIScrollViewDelegate {
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         adjustScrollPosition()
     }
     
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         adjustScrollPosition()
     }
     
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         timer?.fireDate = Date.distantFuture
     }
     
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         adjustScrollPosition()
         timer?.fireDate = Date.init(timeIntervalSinceNow: 5)
     }
