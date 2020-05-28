@@ -139,7 +139,7 @@ public class CLBannerView: UIView, UIScrollViewDelegate {
     private func adjustScrollPosition() {
         if 2 == scrollView.contentOffset.x / scrollView.bounds.width {
             currentIndex += 1;
-            if currentIndex == displayImages.count - 1 {
+            if currentIndex >= displayImages.count - 1 {
                 currentIndex = 1
             }
             imageViews.first?.image = displayImages[currentIndex - 1]
@@ -149,7 +149,7 @@ public class CLBannerView: UIView, UIScrollViewDelegate {
             scrollView.setContentOffset(CGPoint(x: scrollView.bounds.width, y: 0), animated: false)
         } else if 0 == scrollView.contentOffset.x {
             currentIndex -= 1
-            if currentIndex == 0 {
+            if currentIndex <= 0 {
                 currentIndex = displayImages.count - 2
             }
             imageViews.first?.image = displayImages[currentIndex - 1]
