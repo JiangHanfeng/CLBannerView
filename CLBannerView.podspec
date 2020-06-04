@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CLBannerView'
-  s.version          = '0.2.0'
+  s.version          = '0.2.1'
   s.summary          = 'A short description of CLBannerView.'
 
 # This description is used to generate tags and improve search results.
