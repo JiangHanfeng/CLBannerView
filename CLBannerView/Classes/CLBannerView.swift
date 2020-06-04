@@ -3,7 +3,7 @@
 //
 //  Created by Borya on 2020/4/9.
 //  Copyright © 2020 Yuantel. All rights reserved.
-//
+//  v0.2.0
 
 /*
  3个imageView循环滚动显示；scrollView始终显示的都是第二个imageView，即当scrollView滑动到第一个imageView或者第三个imageView的位置时，重新调整3个imageView所要显示的图片，然后将scrollView还原到第二个imageView的位置；
@@ -18,6 +18,7 @@ public class CLBannerView: UIView, UIScrollViewDelegate {
     fileprivate var imageViews: [UIImageView] = []
     fileprivate var timer: Timer?
     var currentIndex: Int = 0
+    var didSelectBanner: ((_ index: Int) -> Void)?
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: bounds)
@@ -89,6 +90,10 @@ public class CLBannerView: UIView, UIScrollViewDelegate {
                 imageView.image = displayImages[i]
                 scrollView.addSubview(imageView)
                 imageViews.append(imageView)
+
+                imageView.isUserInteractionEnabled = true
+                let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapImageView(tap:)))
+                imageView.addGestureRecognizer(tap)
                 
                 scrollView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]|", options: .alignAllCenterX, metrics: nil, views: ["imageView":imageView]))
                 addConstraint(NSLayoutConstraint.init(item: imageView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
@@ -114,6 +119,10 @@ public class CLBannerView: UIView, UIScrollViewDelegate {
             addConstraint(NSLayoutConstraint.init(item: pageControl, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
             addConstraint(NSLayoutConstraint.init(item: pageControl, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 20))
         }
+    }
+    
+    @objc func tapImageView(tap: UITapGestureRecognizer) {
+        didSelectBanner?(pageControl.currentPage)
     }
     
     private func initialState() {
